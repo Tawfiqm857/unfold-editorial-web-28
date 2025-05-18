@@ -3,16 +3,16 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
 import ArticleCard from '@/components/ArticleCard';
-import { getArticlesByCategory, getAllCategories } from '@/utils/mockData';
+import { getMagazineArticlesByCategory, getAllMagazineCategories } from '@/utils/magazineContent';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 
 const CategoryPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const [activeCategory, setActiveCategory] = useState<string>(slug || 'culture');
-  const categories = getAllCategories();
+  const categories = getAllMagazineCategories();
   
-  const articles = getArticlesByCategory(activeCategory);
+  const articles = getMagazineArticlesByCategory(activeCategory);
   
   useEffect(() => {
     if (slug) {

@@ -4,13 +4,13 @@ import { useEffect } from 'react';
 import Layout from '@/components/Layout';
 import ShareButtons from '@/components/ShareButtons';
 import ArticleCard from '@/components/ArticleCard';
-import { getArticleBySlug, getArticlesByCategory, getRecentArticles } from '@/utils/mockData';
+import { getMagazineArticleBySlug, getRecentMagazineArticles, getMagazineArticlesByCategory } from '@/utils/magazineContent';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 
 const ArticlePage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const article = getArticleBySlug(slug || '');
+  const article = getMagazineArticleBySlug(slug || '');
   
   useEffect(() => {
     // Scroll to top when article changes
@@ -34,13 +34,13 @@ const ArticlePage = () => {
   }
 
   // Get related articles from the same category
-  const relatedArticles = getArticlesByCategory(article.category)
+  const relatedArticles = getMagazineArticlesByCategory(article.category)
     .filter(a => a.id !== article.id)
     .slice(0, 3);
   
   // If we don't have enough related articles, add some recent ones
   const fillerArticles = relatedArticles.length < 3 
-    ? getRecentArticles(6)
+    ? getRecentMagazineArticles(6)
         .filter(a => a.id !== article.id && !relatedArticles.some(rel => rel.id === a.id))
         .slice(0, 3 - relatedArticles.length) 
     : [];

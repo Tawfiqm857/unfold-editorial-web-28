@@ -4,30 +4,53 @@ import Layout from '@/components/Layout';
 import FeaturedArticle from '@/components/FeaturedArticle';
 import ArticleCard from '@/components/ArticleCard';
 import CategoryPreview from '@/components/CategoryPreview';
-import { getFeaturedArticles, getRecentArticles, getArticlesByCategory } from '@/utils/mockData';
 import { Button } from "@/components/ui/button";
+import { getLatestMagazineArticle, getRecentMagazineArticles, getMagazineArticlesByCategory } from '@/utils/magazineContent';
+import { Link } from 'react-router-dom';
 
 const Index = () => {
-  const featuredArticles = getFeaturedArticles();
-  const recentArticles = getRecentArticles(6);
+  const featuredArticle = getLatestMagazineArticle();
+  const recentArticles = getRecentMagazineArticles(6);
   
-  // Get articles for each category preview
-  const businessArticles = getArticlesByCategory('business').slice(0, 3);
-  const cultureArticles = getArticlesByCategory('culture').slice(0, 3);
-  const lifestyleArticles = getArticlesByCategory('lifestyle').slice(0, 3);
+  // Get articles for category previews
+  const businessArticles = getMagazineArticlesByCategory('Business').slice(0, 3);
+  const cultureArticles = getMagazineArticlesByCategory('Culture').slice(0, 3);
+  const lifestyleArticles = getMagazineArticlesByCategory('Lifestyle').slice(0, 3);
   
   return (
     <Layout>
-      {/* Hero / Featured Article */}
-      {featuredArticles[0] && (
+      {/* Hero Banner */}
+      <section className="bg-black text-white py-24 md:py-32">
+        <div className="container-xl">
+          <div className="max-w-3xl">
+            <h1 className="text-5xl md:text-7xl font-serif font-medium mb-6">UNFOLD</h1>
+            <p className="text-xl md:text-2xl mb-6">
+              A bold new space where stories rise, style speaks, and every page drips with purpose and pulse.
+            </p>
+            <div className="flex gap-4">
+              <Link to="/table-of-contents">
+                <Button variant="outline" className="border-white text-white hover:bg-white hover:text-black">
+                  Explore
+                </Button>
+              </Link>
+              <Link to="/about">
+                <Button className="bg-white text-black hover:bg-white/90">About Us</Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Article */}
+      {featuredArticle && (
         <FeaturedArticle
-          title={featuredArticles[0].title}
-          excerpt={featuredArticles[0].excerpt}
-          image={featuredArticles[0].image}
-          category={featuredArticles[0].category}
-          slug={featuredArticles[0].slug}
-          author={featuredArticles[0].author}
-          date={featuredArticles[0].date}
+          title={featuredArticle.title}
+          excerpt={featuredArticle.excerpt}
+          image={featuredArticle.image}
+          category={featuredArticle.category}
+          slug={featuredArticle.slug}
+          author={featuredArticle.author}
+          date={featuredArticle.date}
         />
       )}
       
@@ -81,30 +104,70 @@ const Index = () => {
       </section>
       
       {/* Category Previews */}
-      <CategoryPreview category="Business" articles={businessArticles} />
-      <CategoryPreview category="Culture" articles={cultureArticles} />
-      <CategoryPreview category="Lifestyle" articles={lifestyleArticles} />
+      {cultureArticles.length > 0 && (
+        <CategoryPreview category="Culture" articles={cultureArticles} />
+      )}
+      
+      {/* Featured Quote */}
+      <section className="bg-black text-white py-16 md:py-24">
+        <div className="container-lg">
+          <blockquote className="text-2xl md:text-4xl lg:text-5xl font-serif text-center max-w-4xl mx-auto leading-tight">
+            "Born in the hustle, raised by resistance. We're the sunrise after every storm."
+          </blockquote>
+        </div>
+      </section>
+      
+      {/* More Categories */}
+      {lifestyleArticles.length > 0 && (
+        <CategoryPreview category="Lifestyle" articles={lifestyleArticles} />
+      )}
       
       {/* Topics Grid */}
       <section className="container-xl py-16">
-        <h2 className="text-2xl md:text-3xl font-serif mb-10 text-center">Explore Topics</h2>
+        <h2 className="text-2xl md:text-3xl font-serif mb-10 text-center">SPECIAL ISSUE</h2>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          <a href="/category/culture" className="aspect-square flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-100 dark:from-amber-950/30 dark:to-orange-900/30 rounded-lg hover:opacity-90 transition-opacity">
-            <span className="font-medium">Culture</span>
-          </a>
-          <a href="/category/business" className="aspect-square flex items-center justify-center bg-gradient-to-br from-blue-50 to-sky-100 dark:from-blue-950/30 dark:to-sky-900/30 rounded-lg hover:opacity-90 transition-opacity">
-            <span className="font-medium">Business</span>
-          </a>
-          <a href="/category/lifestyle" className="aspect-square flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-950/30 dark:to-emerald-900/30 rounded-lg hover:opacity-90 transition-opacity">
-            <span className="font-medium">Lifestyle</span>
-          </a>
-          <a href="/category/creators" className="aspect-square flex items-center justify-center bg-gradient-to-br from-purple-50 to-violet-100 dark:from-purple-950/30 dark:to-violet-900/30 rounded-lg hover:opacity-90 transition-opacity">
-            <span className="font-medium">Creators</span>
-          </a>
-          <a href="/category/insights" className="aspect-square flex items-center justify-center bg-gradient-to-br from-rose-50 to-pink-100 dark:from-rose-950/30 dark:to-pink-900/30 rounded-lg hover:opacity-90 transition-opacity">
-            <span className="font-medium">Insights</span>
-          </a>
+        <div className="border-t border-b py-8">
+          <div className="max-w-3xl mx-auto text-center">
+            <h3 className="text-3xl md:text-5xl font-serif mb-6">NIGERIA'S YOUTH ENTREPRENEURSHIP REVOLUTION</h3>
+            <p className="text-lg text-muted-foreground mb-8">
+              In this special issue, we dive into the stories, challenges, and triumphs of the next generation of Nigerian business leaders, 
+              exploring how they are shaping the future of the country's economy and culture.
+            </p>
+            <Link to="/article/special-issue-nigeria-youth-entrepreneurship-revolution">
+              <Button size="lg" className="rounded-full px-8">
+                Read More
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+      
+      {/* Playlist Section */}
+      <section className="bg-muted/30 py-16">
+        <div className="container-xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <h2 className="text-3xl md:text-5xl font-serif mb-6">UNFOLD AFROBEAT PLAYLIST</h2>
+              <p className="text-lg text-muted-foreground mb-6">
+                Dive into the rhythm and energy of the best Afrobeats tracks that are defining the sound of a generation.
+              </p>
+              <Link to="/article/unfold-afrobeat-playlist">
+                <Button variant="outline" className="rounded-full px-8">
+                  Explore Playlist
+                </Button>
+              </Link>
+            </div>
+            <div className="aspect-square bg-gray-100 dark:bg-gray-800 rounded-xl p-8 flex flex-col justify-center">
+              <ol className="list-decimal pl-6 space-y-2 text-sm md:text-base">
+                <li>Wizkid – "Kese"</li>
+                <li>Rema – "Baby (Is It a Crime)"</li>
+                <li>Davido – "With You" ft. Omah Lay</li>
+                <li>Asake – "Why Love"</li>
+                <li>Zlatan – "Better" ft. Fola</li>
+                <li className="text-muted-foreground">+ 15 more tracks</li>
+              </ol>
+            </div>
+          </div>
         </div>
       </section>
     </Layout>
