@@ -57,14 +57,15 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Adding custom colors for the magazine
+        // Enhanced magazine colors inspired by the reference images
         magazine: {
-          teal: "#43B9B0",
-          coral: "#FF7C65",
-          orange: "#FF9F1C",
-          navy: "#1A2B50",
-          sand: "#E2D1C3",
-          gold: "#FFC857",
+          teal: "#43B9B0",     // From Vision Horizon travel image
+          coral: "#FF7C65",    // From the Umrah travel ad
+          orange: "#FF9F1C",   // From the sunset imagery
+          navy: "#1A2B50",     // From the Unfold SHEEP image
+          sand: "#E2D1C3",     // From the desert scene
+          gold: "#FFC857",     // Added for accent
+          charcoal: "#222222", // For dark sections
         },
       },
       borderRadius: {

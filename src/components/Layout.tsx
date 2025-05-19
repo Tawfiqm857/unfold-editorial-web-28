@@ -29,7 +29,7 @@ const Layout = ({ children }: LayoutProps) => {
           <ThemeToggle />
         </div>
       )}
-      <main className="flex-grow pt-16 lg:pt-20">
+      <main className="flex-grow">
         {children}
       </main>
       <Footer />
