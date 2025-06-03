@@ -1,3 +1,4 @@
+
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -26,10 +27,10 @@ const Index = () => {
         <div className="container mx-auto px-4 py-16">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-              Welcome to Our Magazine
+              Welcome to Unfold Magazine
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Discover amazing articles, insights, and stories from our community of writers.
+              A bold new space where stories rise, style speaks, and every page drips with purpose and pulse.
             </p>
           </div>
 
@@ -52,6 +53,11 @@ const Index = () => {
                     Browse Articles
                   </Button>
                 </Link>
+                <Link to="/shop">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                    Shop Printed Copies
+                  </Button>
+                </Link>
                 <Link to="/about">
                   <Button variant="outline" size="lg" className="w-full sm:w-auto">
                     Learn More
@@ -72,13 +78,18 @@ const Index = () => {
               
               <div className="space-y-4">
                 <Link to="/auth" className="block">
-                  <Button size="lg" className="w-full">
+                  <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                     Sign In / Sign Up
                   </Button>
                 </Link>
                 <Link to="/table-of-contents">
                   <Button variant="outline" size="lg" className="w-full">
                     Browse Articles
+                  </Button>
+                </Link>
+                <Link to="/shop">
+                  <Button variant="outline" size="lg" className="w-full">
+                    Shop Printed Copies
                   </Button>
                 </Link>
               </div>

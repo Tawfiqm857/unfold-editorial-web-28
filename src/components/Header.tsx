@@ -60,6 +60,9 @@ const Header = () => {
           <Link to="/category/insights" className="text-sm font-medium hover:text-primary/80 transition-colors">
             Insights
           </Link>
+          <Link to="/shop" className="text-sm font-medium hover:text-primary/80 transition-colors">
+            Shop
+          </Link>
         </nav>
 
         {/* Right Section */}
@@ -143,6 +146,13 @@ const Header = () => {
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Insights
+          </Link>
+          <Link 
+            to="/shop" 
+            className="text-lg font-medium px-4 py-2 hover:bg-muted rounded-md"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Shop
           </Link>
         </nav>
       </div>

@@ -13,6 +13,7 @@ import CategoryPage from "./pages/CategoryPage";
 import AboutPage from "./pages/AboutPage";
 import TableOfContents from "./pages/TableOfContents";
 import AuthPage from "./pages/AuthPage";
+import ShopPage from "./pages/ShopPage";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
+              <Route path="/shop" element={<ShopPage />} />
               <Route path="/article/:slug" element={<ArticlePage />} />
               <Route path="/category/:slug" element={<CategoryPage />} />
               <Route path="/about" element={<AboutPage />} />
