@@ -38,55 +38,58 @@ const Header = () => {
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-background/80 backdrop-blur-md shadow-sm border-b' 
-          : 'bg-transparent'
+          ? 'bg-background/95 backdrop-blur-md shadow-lg border-b' 
+          : 'bg-background/90 backdrop-blur-sm shadow-sm'
       }`}
     >
-      <div className="container-xl flex items-center justify-between py-4">
+      <div className="container mx-auto px-4 flex items-center justify-between py-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <h1 className="text-2xl md:text-3xl font-serif font-semibold tracking-tighter">
+          <h1 className="text-2xl md:text-3xl font-serif font-semibold tracking-tighter text-foreground">
             Unfold<span className="text-muted-foreground/60">.</span>
           </h1>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
-          <Link to="/category/culture" className="text-sm font-medium hover:text-primary/80 transition-colors">
+        <nav className="hidden md:flex items-center space-x-6">
+          <Link to="/category/culture" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Culture
           </Link>
-          <Link to="/category/business" className="text-sm font-medium hover:text-primary/80 transition-colors">
+          <Link to="/category/business" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Business
           </Link>
-          <Link to="/category/lifestyle" className="text-sm font-medium hover:text-primary/80 transition-colors">
+          <Link to="/category/lifestyle" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Lifestyle
           </Link>
-          <Link to="/category/creators" className="text-sm font-medium hover:text-primary/80 transition-colors">
+          <Link to="/category/creators" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Creators
           </Link>
-          <Link to="/category/insights" className="text-sm font-medium hover:text-primary/80 transition-colors">
+          <Link to="/category/insights" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Insights
           </Link>
-          <Link to="/shop" className="text-sm font-medium hover:text-primary/80 transition-colors">
+          <Link to="/shop" className="text-sm font-medium text-foreground hover:text-primary transition-colors border border-border px-3 py-1 rounded-md hover:bg-accent">
             Shop
           </Link>
           {user ? (
             <Button 
-              variant="ghost" 
+              variant="outline" 
               onClick={handleSignOut}
-              className="text-sm font-medium hover:text-primary/80 transition-colors"
+              className="text-sm font-medium"
+              size="sm"
             >
               Sign Out
             </Button>
           ) : (
-            <Link to="/auth" className="text-sm font-medium hover:text-primary/80 transition-colors">
-              Sign In / Sign Up
-            </Link>
+            <Button asChild variant="default" size="sm">
+              <Link to="/auth" className="text-sm font-medium">
+                Sign In / Sign Up
+              </Link>
+            </Button>
           )}
         </nav>
 
         {/* Right Section */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
           <ThemeToggle />
           
           {/* Mobile Menu Button */}
@@ -127,69 +130,71 @@ const Header = () => {
 
       {/* Mobile Menu */}
       <div 
-        className={`md:hidden transition-all duration-300 ease-in-out bg-background border-b overflow-hidden ${
+        className={`md:hidden transition-all duration-300 ease-in-out bg-background/95 backdrop-blur-md border-b overflow-hidden ${
           isMobileMenuOpen ? 'max-h-96 py-4' : 'max-h-0'
         }`}
       >
-        <nav className="container flex flex-col space-y-4 pb-4">
+        <nav className="container mx-auto px-4 flex flex-col space-y-3 pb-4">
           <Link 
             to="/category/culture" 
-            className="text-lg font-medium px-4 py-2 hover:bg-muted rounded-md"
+            className="text-lg font-medium px-4 py-3 hover:bg-accent rounded-md text-foreground"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Culture
           </Link>
           <Link 
             to="/category/business" 
-            className="text-lg font-medium px-4 py-2 hover:bg-muted rounded-md"
+            className="text-lg font-medium px-4 py-3 hover:bg-accent rounded-md text-foreground"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Business
           </Link>
           <Link 
             to="/category/lifestyle" 
-            className="text-lg font-medium px-4 py-2 hover:bg-muted rounded-md"
+            className="text-lg font-medium px-4 py-3 hover:bg-accent rounded-md text-foreground"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Lifestyle
           </Link>
           <Link 
             to="/category/creators" 
-            className="text-lg font-medium px-4 py-2 hover:bg-muted rounded-md"
+            className="text-lg font-medium px-4 py-3 hover:bg-accent rounded-md text-foreground"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Creators
           </Link>
           <Link 
             to="/category/insights" 
-            className="text-lg font-medium px-4 py-2 hover:bg-muted rounded-md"
+            className="text-lg font-medium px-4 py-3 hover:bg-accent rounded-md text-foreground"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Insights
           </Link>
           <Link 
             to="/shop" 
-            className="text-lg font-medium px-4 py-2 hover:bg-muted rounded-md"
+            className="text-lg font-medium px-4 py-3 hover:bg-accent rounded-md text-foreground border border-border"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            Shop
+            Shop Printed Copies
           </Link>
           {user ? (
             <Button 
-              variant="ghost" 
+              variant="outline" 
               onClick={handleSignOut}
-              className="text-lg font-medium px-4 py-2 hover:bg-muted rounded-md text-left justify-start"
+              className="text-lg font-medium mx-4 justify-start"
             >
               Sign Out
             </Button>
           ) : (
-            <Link 
-              to="/auth" 
-              className="text-lg font-medium px-4 py-2 hover:bg-muted rounded-md"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Sign In / Sign Up
-            </Link>
+            <Button asChild className="mx-4">
+              <Link 
+                to="/auth" 
+                className="text-lg font-medium text-center"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Sign In / Sign Up
+              </Link>
+            </Button>
           )}
         </nav>
       </div>
