@@ -3,10 +3,12 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from "@/components/ui/button";
+import { useAuth } from '@/contexts/AuthContext';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +27,11 @@ const Header = () => {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -63,6 +70,19 @@ const Header = () => {
           <Link to="/shop" className="text-sm font-medium hover:text-primary/80 transition-colors">
             Shop
           </Link>
+          {user ? (
+            <Button 
+              variant="ghost" 
+              onClick={handleSignOut}
+              className="text-sm font-medium hover:text-primary/80 transition-colors"
+            >
+              Sign Out
+            </Button>
+          ) : (
+            <Link to="/auth" className="text-sm font-medium hover:text-primary/80 transition-colors">
+              Sign In / Sign Up
+            </Link>
+          )}
         </nav>
 
         {/* Right Section */}
@@ -154,6 +174,23 @@ const Header = () => {
           >
             Shop
           </Link>
+          {user ? (
+            <Button 
+              variant="ghost" 
+              onClick={handleSignOut}
+              className="text-lg font-medium px-4 py-2 hover:bg-muted rounded-md text-left justify-start"
+            >
+              Sign Out
+            </Button>
+          ) : (
+            <Link 
+              to="/auth" 
+              className="text-lg font-medium px-4 py-2 hover:bg-muted rounded-md"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Sign In / Sign Up
+            </Link>
+          )}
         </nav>
       </div>
     </header>
