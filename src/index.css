@@ -134,17 +134,4 @@
   .container-lg {
     @apply max-w-5xl mx-auto px-4 sm:px-6 lg:px-8;
   }
-  
-  /* Magazine-specific styling */
-  .magazine-title {
-    @apply font-serif font-bold tracking-tight;
-  }
-  
-  .magazine-subtitle {
-    @apply font-serif italic;
-  }
-
-  .hero-gradient {
-    @apply bg-gradient-to-r from-magazine-navy/90 to-black/70;
-  }
 }

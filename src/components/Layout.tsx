@@ -22,14 +22,14 @@ const Layout = ({ children }: LayoutProps) => {
       {isHomePage && (
         <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
           <Link to="/table-of-contents">
-            <Button size="icon" variant="secondary" className="rounded-full shadow-md hover:shadow-lg transition-all" aria-label="Table of Contents">
+            <Button size="icon" variant="secondary" className="rounded-full shadow-md" aria-label="Table of Contents">
               <TableOfContents className="h-5 w-5" />
             </Button>
           </Link>
           <ThemeToggle />
         </div>
       )}
-      <main className="flex-grow">
+      <main className="flex-grow pt-20">
         {children}
       </main>
       <Footer />
