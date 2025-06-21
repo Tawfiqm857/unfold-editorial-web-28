@@ -12,76 +12,35 @@ const DesktopNavigation = ({ onSignOut }: DesktopNavigationProps) => {
 
   return (
     <nav className="hidden md:flex items-center space-x-6">
-      <Link 
-        to="/table-of-contents" 
-        className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 hover:scale-105"
-      >
-        Articles
-      </Link>
-      <Link 
-        to="/category/culture" 
-        className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 hover:scale-105"
-      >
+      <Link to="/category/culture" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
         Culture
       </Link>
-      <Link 
-        to="/category/business" 
-        className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 hover:scale-105"
-      >
+      <Link to="/category/business" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
         Business
       </Link>
-      <Link 
-        to="/category/lifestyle" 
-        className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 hover:scale-105"
-      >
+      <Link to="/category/lifestyle" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
         Lifestyle
       </Link>
-      <Link 
-        to="/category/creators" 
-        className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 hover:scale-105"
-      >
+      <Link to="/category/creators" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
         Creators
       </Link>
-      <Link 
-        to="/category/insights" 
-        className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 hover:scale-105"
-      >
+      <Link to="/category/insights" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
         Insights
       </Link>
-      <Link 
-        to="/shop" 
-        className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 border border-border hover:border-primary px-3 py-1 rounded-md hover:bg-accent/50 hover:scale-105"
-      >
+      <Link to="/shop" className="text-sm font-medium text-foreground hover:text-primary transition-colors border border-border px-3 py-1 rounded-md hover:bg-accent">
         Shop
-      </Link>
-      <Link 
-        to="/shop/online" 
-        className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 hover:scale-105"
-      >
-        Digital
-      </Link>
-      <Link 
-        to="/about" 
-        className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 hover:scale-105"
-      >
-        About
       </Link>
       {user ? (
         <Button 
           variant="outline" 
           onClick={onSignOut}
-          className="text-sm font-medium hover:scale-105 transition-all duration-200"
+          className="text-sm font-medium"
           size="sm"
         >
           Sign Out
         </Button>
       ) : (
-        <Button 
-          asChild 
-          variant="default" 
-          size="sm" 
-          className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 hover:scale-105 transition-all duration-200"
-        >
+        <Button asChild variant="default" size="sm">
           <Link to="/auth" className="text-sm font-medium">
             Sign In / Sign Up
           </Link>

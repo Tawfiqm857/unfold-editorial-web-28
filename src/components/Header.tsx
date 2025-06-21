@@ -50,9 +50,9 @@ const Header = () => {
     >
       <div className="container mx-auto px-4 flex items-center justify-between py-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center hover:scale-105 transition-transform duration-200">
+        <Link to="/" className="flex items-center">
           <h1 className="text-2xl md:text-3xl font-serif font-semibold tracking-tighter text-foreground">
-            Unfold<span className="text-primary">.</span>
+            Unfold<span className="text-muted-foreground/60">.</span>
           </h1>
         </Link>
 

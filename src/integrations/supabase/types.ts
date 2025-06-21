@@ -9,68 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      article_authors: {
-        Row: {
-          article_slug: string
-          author_id: string
-          created_at: string
-          id: string
-        }
-        Insert: {
-          article_slug: string
-          author_id: string
-          created_at?: string
-          id?: string
-        }
-        Update: {
-          article_slug?: string
-          author_id?: string
-          created_at?: string
-          id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "article_authors_author_id_fkey"
-            columns: ["author_id"]
-            isOneToOne: false
-            referencedRelation: "authors"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      authors: {
-        Row: {
-          bio: string | null
-          created_at: string
-          id: string
-          name: string
-          profile_image_url: string | null
-          social_links: Json | null
-          updated_at: string
-          website_url: string | null
-        }
-        Insert: {
-          bio?: string | null
-          created_at?: string
-          id?: string
-          name: string
-          profile_image_url?: string | null
-          social_links?: Json | null
-          updated_at?: string
-          website_url?: string | null
-        }
-        Update: {
-          bio?: string | null
-          created_at?: string
-          id?: string
-          name?: string
-          profile_image_url?: string | null
-          social_links?: Json | null
-          updated_at?: string
-          website_url?: string | null
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           created_at: string
@@ -92,36 +30,6 @@ export type Database = {
           full_name?: string | null
           id?: string
           updated_at?: string
-        }
-        Relationships: []
-      }
-      purchases: {
-        Row: {
-          created_at: string
-          id: string
-          magazine_issue: string
-          payment_id: string | null
-          payment_status: string
-          price: number
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          magazine_issue: string
-          payment_id?: string | null
-          payment_status?: string
-          price: number
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          magazine_issue?: string
-          payment_id?: string | null
-          payment_status?: string
-          price?: number
-          user_id?: string
         }
         Relationships: []
       }
