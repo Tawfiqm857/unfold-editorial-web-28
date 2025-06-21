@@ -14,6 +14,8 @@ import AboutPage from "./pages/AboutPage";
 import TableOfContents from "./pages/TableOfContents";
 import AuthPage from "./pages/AuthPage";
 import ShopPage from "./pages/ShopPage";
+import OnlineShopPage from "./pages/OnlineShopPage";
+import AuthorPortfolioPage from "./pages/AuthorPortfolioPage";
 
 const queryClient = new QueryClient();
 
@@ -41,10 +43,12 @@ const App = () => {
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/shop" element={<ShopPage />} />
+              <Route path="/shop/online" element={<OnlineShopPage />} />
               <Route path="/article/:slug" element={<ArticlePage />} />
               <Route path="/category/:slug" element={<CategoryPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/table-of-contents" element={<TableOfContents />} />
+              <Route path="/author/:authorId" element={<AuthorPortfolioPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

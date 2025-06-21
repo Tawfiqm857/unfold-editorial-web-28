@@ -1,99 +1,116 @@
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { toast } from '@/hooks/use-toast';
+import { Label } from '@/components/ui/label';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 import Layout from '@/components/Layout';
+import { Eye, EyeOff } from 'lucide-react';
 
 const AuthPage = () => {
-  const [loading, setLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+  // Redirect if already authenticated
+  if (user) {
+    navigate('/');
+    return null;
+  }
+
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-
-    const { error } = await signIn(email, password);
-
-    if (error) {
+    setIsLoading(true);
+    
+    try {
+      const { error } = await signIn(email, password);
+      if (error) {
+        toast({
+          title: "Sign In Failed",
+          description: error.message,
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Welcome back!",
+          description: "You have successfully signed in."
+        });
+        navigate('/');
+      }
+    } catch (error) {
       toast({
         title: "Error",
-        description: error.message,
-        variant: "destructive",
+        description: "An unexpected error occurred",
+        variant: "destructive"
       });
-    } else {
-      toast({
-        title: "Success",
-        description: "Welcome back!",
-      });
-      navigate('/');
+    } finally {
+      setIsLoading(false);
     }
-
-    setLoading(false);
   };
 
-  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    const fullName = formData.get('fullName') as string;
-
-    const { error } = await signUp(email, password, fullName);
-
-    if (error) {
+    setIsLoading(true);
+    
+    try {
+      const { error } = await signUp(email, password, fullName);
+      if (error) {
+        toast({
+          title: "Sign Up Failed",
+          description: error.message,
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Account Created!",
+          description: "Please check your email to verify your account."
+        });
+      }
+    } catch (error) {
       toast({
         title: "Error",
-        description: error.message,
-        variant: "destructive",
+        description: "An unexpected error occurred",
+        variant: "destructive"
       });
-    } else {
-      toast({
-        title: "Success",
-        description: "Account created successfully! Please check your email to verify your account.",
-      });
+    } finally {
+      setIsLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <Layout>
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
-          <div className="text-center">
-            <h2 className="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">
-              Welcome
-            </h2>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              Sign in to your account or create a new one
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5 flex items-center justify-center py-12 px-4">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-serif font-bold text-foreground mb-2">
+              Welcome to Unfold
+            </h1>
+            <p className="text-muted-foreground">
+              Join our community of readers and creators
             </p>
           </div>
 
-          <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="signin">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            </TabsList>
+          <Card className="backdrop-blur-sm bg-card/95 shadow-xl border-border/50">
+            <Tabs defaultValue="signin" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="signin" className="text-sm font-medium">Sign In</TabsTrigger>
+                <TabsTrigger value="signup" className="text-sm font-medium">Sign Up</TabsTrigger>
+              </TabsList>
 
-            <TabsContent value="signin">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Sign In</CardTitle>
+              <TabsContent value="signin">
+                <CardHeader className="space-y-1 pb-4">
+                  <CardTitle className="text-2xl font-semibold">Sign In</CardTitle>
                   <CardDescription>
-                    Enter your email and password to access your account
+                    Enter your credentials to access your account
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -102,78 +119,120 @@ const AuthPage = () => {
                       <Label htmlFor="signin-email">Email</Label>
                       <Input
                         id="signin-email"
-                        name="email"
                         type="email"
-                        required
                         placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                       />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="signin-password">Password</Label>
-                      <Input
-                        id="signin-password"
-                        name="password"
-                        type="password"
-                        required
-                        placeholder="Enter your password"
-                      />
+                      <div className="relative">
+                        <Input
+                          id="signin-password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Enter your password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                          className="pr-10 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </Button>
+                      </div>
                     </div>
-                    <Button type="submit" className="w-full" disabled={loading}>
-                      {loading ? 'Signing In...' : 'Sign In'}
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-200" 
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Signing In..." : "Sign In"}
                     </Button>
                   </form>
                 </CardContent>
-              </Card>
-            </TabsContent>
+              </TabsContent>
 
-            <TabsContent value="signup">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Sign Up</CardTitle>
+              <TabsContent value="signup">
+                <CardHeader className="space-y-1 pb-4">
+                  <CardTitle className="text-2xl font-semibold">Create Account</CardTitle>
                   <CardDescription>
-                    Create a new account to get started
+                    Join Unfold and start your reading journey
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSignUp} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="signup-fullname">Full Name</Label>
+                      <Label htmlFor="signup-name">Full Name</Label>
                       <Input
-                        id="signup-fullname"
-                        name="fullName"
+                        id="signup-name"
                         type="text"
                         placeholder="Enter your full name"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        required
+                        className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                       />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="signup-email">Email</Label>
                       <Input
                         id="signup-email"
-                        name="email"
                         type="email"
-                        required
                         placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                       />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="signup-password">Password</Label>
-                      <Input
-                        id="signup-password"
-                        name="password"
-                        type="password"
-                        required
-                        placeholder="Enter your password"
-                        minLength={6}
-                      />
+                      <div className="relative">
+                        <Input
+                          id="signup-password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Create a password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                          minLength={6}
+                          className="pr-10 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Password must be at least 6 characters long
+                      </p>
                     </div>
-                    <Button type="submit" className="w-full" disabled={loading}>
-                      {loading ? 'Creating Account...' : 'Sign Up'}
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-200" 
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Creating Account..." : "Create Account"}
                     </Button>
                   </form>
                 </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+              </TabsContent>
+            </Tabs>
+          </Card>
         </div>
       </div>
     </Layout>
