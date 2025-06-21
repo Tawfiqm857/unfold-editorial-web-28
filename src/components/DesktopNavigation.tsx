@@ -13,6 +13,12 @@ const DesktopNavigation = ({ onSignOut }: DesktopNavigationProps) => {
   return (
     <nav className="hidden md:flex items-center space-x-6">
       <Link 
+        to="/table-of-contents" 
+        className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 hover:scale-105"
+      >
+        Articles
+      </Link>
+      <Link 
         to="/category/culture" 
         className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 hover:scale-105"
       >
@@ -47,6 +53,18 @@ const DesktopNavigation = ({ onSignOut }: DesktopNavigationProps) => {
         className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 border border-border hover:border-primary px-3 py-1 rounded-md hover:bg-accent/50 hover:scale-105"
       >
         Shop
+      </Link>
+      <Link 
+        to="/shop/online" 
+        className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 hover:scale-105"
+      >
+        Digital
+      </Link>
+      <Link 
+        to="/about" 
+        className="text-sm font-medium text-foreground hover:text-primary transition-all duration-200 hover:scale-105"
+      >
+        About
       </Link>
       {user ? (
         <Button 

@@ -15,10 +15,17 @@ const MobileNavigation = ({ isMobileMenuOpen, onSignOut, onMenuItemClick }: Mobi
   return (
     <div 
       className={`md:hidden transition-all duration-300 ease-in-out bg-background/95 backdrop-blur-md border-b overflow-hidden ${
-        isMobileMenuOpen ? 'max-h-96 py-4' : 'max-h-0'
+        isMobileMenuOpen ? 'max-h-screen py-4' : 'max-h-0'
       }`}
     >
       <nav className="container mx-auto px-4 flex flex-col space-y-3 pb-4">
+        <Link 
+          to="/table-of-contents" 
+          className="text-lg font-medium px-4 py-3 hover:bg-accent rounded-md text-foreground transition-all duration-200 hover:scale-105"
+          onClick={onMenuItemClick}
+        >
+          Browse Articles
+        </Link>
         <Link 
           to="/category/culture" 
           className="text-lg font-medium px-4 py-3 hover:bg-accent rounded-md text-foreground transition-all duration-200 hover:scale-105"
@@ -59,7 +66,21 @@ const MobileNavigation = ({ isMobileMenuOpen, onSignOut, onMenuItemClick }: Mobi
           className="text-lg font-medium px-4 py-3 hover:bg-accent rounded-md text-foreground border border-border transition-all duration-200 hover:scale-105"
           onClick={onMenuItemClick}
         >
-          Shop Magazine Copies
+          Shop Printed Copies
+        </Link>
+        <Link 
+          to="/shop/online" 
+          className="text-lg font-medium px-4 py-3 hover:bg-accent rounded-md text-foreground transition-all duration-200 hover:scale-105"
+          onClick={onMenuItemClick}
+        >
+          Digital Magazine
+        </Link>
+        <Link 
+          to="/about" 
+          className="text-lg font-medium px-4 py-3 hover:bg-accent rounded-md text-foreground transition-all duration-200 hover:scale-105"
+          onClick={onMenuItemClick}
+        >
+          About Us
         </Link>
         {user ? (
           <Button 
