@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
+import Layout from "@/components/Layout";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ArticlePage from "./pages/ArticlePage";
@@ -39,19 +40,21 @@ const App = () => {
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/shop" element={<ShopPage />} />
-              <Route path="/shop/online" element={<OnlineShopPage />} />
-              <Route path="/article/:slug" element={<ArticlePage />} />
-              <Route path="/category/:slug" element={<CategoryPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/table-of-contents" element={<TableOfContents />} />
-              <Route path="/author/:authorId" element={<AuthorPortfolioPage />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/shop" element={<ShopPage />} />
+                <Route path="/shop/online" element={<OnlineShopPage />} />
+                <Route path="/article/:slug" element={<ArticlePage />} />
+                <Route path="/category/:slug" element={<CategoryPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/table-of-contents" element={<TableOfContents />} />
+                <Route path="/author/:authorId" element={<AuthorPortfolioPage />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Layout>
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>
