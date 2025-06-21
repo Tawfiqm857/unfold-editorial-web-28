@@ -5,15 +5,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
-import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ArticlePage from "./pages/ArticlePage";
 import CategoryPage from "./pages/CategoryPage";
 import AboutPage from "./pages/AboutPage";
 import TableOfContents from "./pages/TableOfContents";
-import AuthPage from "./pages/AuthPage";
-import ShopPage from "./pages/ShopPage";
 
 const queryClient = new QueryClient();
 
@@ -32,25 +29,21 @@ const App = () => {
   
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/shop" element={<ShopPage />} />
-              <Route path="/article/:slug" element={<ArticlePage />} />
-              <Route path="/category/:slug" element={<CategoryPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/table-of-contents" element={<TableOfContents />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/article/:slug" element={<ArticlePage />} />
+            <Route path="/category/:slug" element={<CategoryPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/table-of-contents" element={<TableOfContents />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
     </QueryClientProvider>
   );
 }
