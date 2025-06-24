@@ -269,16 +269,21 @@ h1, h2, h3, h4, h5, h6 {
 .hero-section {
     background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 100%);
     color: hsl(var(--primary-foreground));
-    padding: 8rem 0 6rem;
+	  
     text-align: center;
     position: relative;
     overflow: hidden;
+  padding: 0.5rem 0; 
+    
 }
 
 .hero-content {
+	  padding: 8rem 1rem 8rem; background:url("/images/hero.jpg") no-repeat center center/cover;
+color:  whitesmoke;	       
+
     position: relative;
     z-index: 2;
-    max-width: 48rem;
+    max-width: 100%;
     margin: 0 auto;
 }
 
