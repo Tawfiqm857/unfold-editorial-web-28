@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize intersection observer for animations
     initIntersectionObserver();
+    
+    // Initialize scroll header effects
+    initScrollEffects();
 });
 
 // Mobile Menu Implementation
@@ -62,30 +65,81 @@ function initMobileMenu() {
     }
 }
 
-// Theme Toggle Implementation
+// Enhanced Theme Toggle Implementation
 function initThemeToggle() {
     const themeToggle = document.getElementById('themeToggle');
+    const mobileThemeToggle = document.getElementById('mobileThemeToggle');
     
+    // Check for saved theme or default to system preference
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    let currentTheme = 'light';
+    
+    if (savedTheme) {
+        currentTheme = savedTheme;
+    } else if (prefersDark) {
+        currentTheme = 'dark';
+    }
+    
+    // Apply initial theme
+    applyTheme(currentTheme);
+    
+    // Add event listeners to both toggle buttons
     if (themeToggle) {
-        // Check for saved theme or default to light mode
-        const savedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    if (mobileThemeToggle) {
+        mobileThemeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    function toggleTheme() {
+        const isDark = document.documentElement.classList.contains('dark');
+        const newTheme = isDark ? 'light' : 'dark';
         
-        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        applyTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Add smooth transition effect
+        document.documentElement.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+        setTimeout(() => {
+            document.documentElement.style.transition = '';
+        }, 300);
+    }
+    
+    function applyTheme(theme) {
+        const isDark = theme === 'dark';
+        
+        if (isDark) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
         }
         
-        themeToggle.addEventListener('click', function() {
-            const isDark = document.documentElement.classList.contains('dark');
-            
-            if (isDark) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
+        // Update icon visibility for all theme toggles
+        updateThemeIcons(isDark);
+    }
+    
+    function updateThemeIcons(isDark) {
+        const allSunIcons = document.querySelectorAll('.theme-toggle .sun-icon');
+        const allMoonIcons = document.querySelectorAll('.theme-toggle .moon-icon');
+        
+        allSunIcons.forEach(icon => {
+            icon.style.display = isDark ? 'none' : 'block';
+        });
+        
+        allMoonIcons.forEach(icon => {
+            icon.style.display = isDark ? 'block' : 'none';
+        });
+    }
+    
+    // Listen for system theme changes
+    if (window.matchMedia) {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        mediaQuery.addEventListener('change', function(e) {
+            if (!localStorage.getItem('theme')) {
+                applyTheme(e.matches ? 'dark' : 'light');
             }
         });
     }
@@ -137,13 +191,34 @@ function initNewsletterForms() {
     }
 }
 
+// Scroll Effects for Header
+function initScrollEffects() {
+    const header = document.querySelector('.header');
+    
+    if (header) {
+        let lastScrollY = window.scrollY;
+        
+        window.addEventListener('scroll', throttle(() => {
+            const currentScrollY = window.scrollY;
+            
+            if (currentScrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            lastScrollY = currentScrollY;
+        }, 100));
+    }
+}
+
 // Email validation helper
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
-// Notification system
+// Enhanced notification system with better styling
 function showNotification(message, type = 'info') {
     // Remove existing notifications
     const existingNotifications = document.querySelectorAll('.notification');
@@ -155,22 +230,26 @@ function showNotification(message, type = 'info') {
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
     
-    // Add styles
+    // Enhanced styles with better theming support
+    const isDark = document.documentElement.classList.contains('dark');
+    const bgColor = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6';
+    
     Object.assign(notification.style, {
         position: 'fixed',
         top: '20px',
         right: '20px',
         zIndex: '9999',
-        padding: '12px 24px',
+        padding: '16px 24px',
         borderRadius: '8px',
         color: 'white',
         fontSize: '14px',
         fontWeight: '500',
-        maxWidth: '300px',
-        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+        maxWidth: '320px',
+        boxShadow: isDark ? '0 10px 25px rgba(0, 0, 0, 0.5)' : '0 10px 25px rgba(0, 0, 0, 0.15)',
         transform: 'translateX(100%)',
         transition: 'transform 0.3s ease',
-        backgroundColor: type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'
+        backgroundColor: bgColor,
+        border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
     });
     
     document.body.appendChild(notification);
@@ -193,13 +272,15 @@ function showNotification(message, type = 'info') {
 
 // Scroll Animations
 function initScrollAnimations() {
-    // Add scroll-triggered animations to elements
-    const animatedElements = document.querySelectorAll('.animate-fade-in, .animate-slide-in-left, .animate-slide-in-right');
+    const animatedElements = document.querySelectorAll('.fade-in, .animate-fade-in, .animate-slide-in-left, .animate-slide-in-right');
     
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.animationPlayState = 'running';
+                entry.target.classList.add('visible');
+                if (entry.target.style.animationPlayState) {
+                    entry.target.style.animationPlayState = 'running';
+                }
                 observer.unobserve(entry.target);
             }
         });
@@ -209,7 +290,9 @@ function initScrollAnimations() {
     });
     
     animatedElements.forEach(element => {
-        element.style.animationPlayState = 'paused';
+        if (element.style.animationPlayState !== undefined) {
+            element.style.animationPlayState = 'paused';
+        }
         observer.observe(element);
     });
 }
@@ -232,7 +315,7 @@ function initSmoothScrolling() {
             if (target) {
                 e.preventDefault();
                 
-                const headerHeight = document.querySelector('.header').offsetHeight;
+                const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
                 const targetPosition = target.offsetTop - headerHeight;
                 
                 window.scrollTo({
@@ -308,19 +391,6 @@ window.addEventListener('resize', throttle(() => {
     }
 }, 250));
 
-// Handle scroll events
-window.addEventListener('scroll', throttle(() => {
-    const header = document.querySelector('.header');
-    
-    if (header) {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    }
-}, 100));
-
 // Add loading state management
 window.addEventListener('beforeunload', () => {
     document.body.classList.add('loading');
@@ -349,7 +419,7 @@ if (document.querySelectorAll('img[data-src]').length > 0) {
     initLazyLoading();
 }
 
-// Add focus management for accessibility
+// Enhanced keyboard navigation and accessibility
 document.addEventListener('keydown', function(e) {
     // ESC key closes mobile menu
     if (e.key === 'Escape') {
@@ -360,6 +430,15 @@ document.addEventListener('keydown', function(e) {
             mobileNav.classList.remove('active');
             mobileMenuBtn.setAttribute('aria-expanded', 'false');
             mobileMenuBtn.focus();
+        }
+    }
+    
+    // Toggle theme with Ctrl/Cmd + Shift + D
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
+        e.preventDefault();
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.click();
         }
     }
 });
@@ -383,7 +462,9 @@ function addSkipLink() {
             backgroundColor: 'hsl(var(--primary))',
             color: 'hsl(var(--primary-foreground))',
             textDecoration: 'none',
-            borderRadius: '4px'
+            borderRadius: '4px',
+            fontSize: '14px',
+            fontWeight: '500'
         });
     });
     
@@ -398,8 +479,49 @@ function addSkipLink() {
 // Initialize skip link
 addSkipLink();
 
-// Add main content ID for skip link
+// Add main content ID for skip link if it doesn't exist
 const mainContent = document.querySelector('.main-content');
-if (mainContent) {
+if (mainContent && !mainContent.id) {
     mainContent.id = 'main-content';
 }
+
+// Add CSS class for screen readers
+const style = document.createElement('style');
+style.textContent = `
+    .sr-only {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+    }
+`;
+document.head.appendChild(style);
+
+// Service Worker registration for PWA capabilities (production ready)
+if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('ServiceWorker registration successful');
+            })
+            .catch(error => {
+                console.log('ServiceWorker registration failed');
+            });
+    });
+}
+
+// Error handling for production
+window.addEventListener('error', function(e) {
+    console.error('Global error:', e.error);
+    // In production, you might want to send this to an error tracking service
+});
+
+window.addEventListener('unhandledrejection', function(e) {
+    console.error('Unhandled promise rejection:', e.reason);
+    // In production, you might want to send this to an error tracking service
+});
