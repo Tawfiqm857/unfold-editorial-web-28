@@ -289,10 +289,16 @@ color:  whitesmoke;
 
 .hero-title {
     font-size: 4rem;
-    font-weight: 500;
     margin-bottom: 1.5rem;
     line-height: 0.9;
     letter-spacing: -0.02em;
+    text-wrap: nowrap;
+    scale: 0.5;
+    visibility:hidden;
+    span{color: rgb(255, 194, 80);
+	font-family:monospace;
+	font-size: 2.5rem;}
+    
 }
 
 @media (min-width: 768px) {
@@ -308,10 +314,12 @@ color:  whitesmoke;
 }
 
 .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1rem;
     margin-bottom: 2rem;
-    opacity: 0.9;
+    color: rgba(169, 169, 169, 0.648);
     line-height: 1.6;
+      position:absolute;
+    bottom: 0;
 }
 
 @media (min-width: 768px) {
