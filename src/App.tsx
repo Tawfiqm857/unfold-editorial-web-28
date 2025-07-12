@@ -15,6 +15,7 @@ import TableOfContents from "./pages/TableOfContents";
 import AuthPage from "./pages/AuthPage";
 import Dashboard from "./pages/Dashboard";
 import OrderPage from "./pages/OrderPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -41,7 +42,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/order" element={<OrderPage />} />
               <Route path="/article/:slug" element={<ArticlePage />} />
               <Route path="/category/:slug" element={<CategoryPage />} />

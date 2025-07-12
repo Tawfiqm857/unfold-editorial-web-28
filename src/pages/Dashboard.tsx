@@ -114,8 +114,11 @@ const Dashboard = () => {
   if (loading || loadingData) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+          <div className="text-center space-y-4">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary/20 border-t-primary mx-auto"></div>
+            <p className="text-muted-foreground animate-pulse">Loading your dashboard...</p>
+          </div>
         </div>
       </Layout>
     );
@@ -123,15 +126,15 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex justify-between items-center mb-8 p-6 bg-card/50 backdrop-blur-sm rounded-xl border shadow-sm">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-              <p className="text-gray-600">Welcome back, {profile?.full_name || user?.email}</p>
+              <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
+              <p className="text-muted-foreground">Welcome back, {profile?.full_name || user?.email}</p>
             </div>
-            <Button variant="outline" onClick={handleSignOut}>
+            <Button variant="outline" onClick={handleSignOut} className="hover:bg-destructive hover:text-destructive-foreground transition-colors">
               <LogOut className="mr-2 h-4 w-4" />
               Sign Out
             </Button>
@@ -140,10 +143,10 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Profile Section */}
             <div className="lg:col-span-1">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <User className="mr-2 h-5 w-5" />
+              <Card className="shadow-lg border-primary/10 hover:shadow-xl transition-shadow">
+                <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5">
+                  <CardTitle className="flex items-center text-foreground">
+                    <User className="mr-2 h-5 w-5 text-primary" />
                     Profile
                   </CardTitle>
                 </CardHeader>
@@ -175,9 +178,9 @@ const Dashboard = () => {
               </Card>
 
               {/* Quick Actions */}
-              <Card className="mt-6">
-                <CardHeader>
-                  <CardTitle>Quick Actions</CardTitle>
+              <Card className="mt-6 shadow-lg border-primary/10 hover:shadow-xl transition-shadow">
+                <CardHeader className="bg-gradient-to-r from-secondary/5 to-primary/5">
+                  <CardTitle className="text-foreground">Quick Actions</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <Button 
@@ -201,10 +204,10 @@ const Dashboard = () => {
 
             {/* Orders Section */}
             <div className="lg:col-span-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <CreditCard className="mr-2 h-5 w-5" />
+              <Card className="shadow-lg border-primary/10 hover:shadow-xl transition-shadow">
+                <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5">
+                  <CardTitle className="flex items-center text-foreground">
+                    <CreditCard className="mr-2 h-5 w-5 text-primary" />
                     Order History
                   </CardTitle>
                   <CardDescription>
