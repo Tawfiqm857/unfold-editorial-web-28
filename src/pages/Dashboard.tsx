@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { User, ShoppingCart, Package, CreditCard, LogOut } from 'lucide-react';
+import { User, ShoppingCart, Package, CreditCard, LogOut, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Order {
@@ -49,39 +49,33 @@ const Dashboard = () => {
     }
   }, [user, loading, navigate]);
 
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
+    if (!user?.id) return;
+    
     try {
-      // Fetch user profile
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user?.id)
-        .single();
+      // Parallel fetch for better performance
+      const [profileResponse, ordersResponse] = await Promise.all([
+        supabase.from('profiles').select('*').eq('id', user.id).single(),
+        supabase.from('orders').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
+      ]);
 
-      if (profileError && profileError.code !== 'PGRST116') {
-        console.error('Error fetching profile:', profileError);
-      } else if (profileData) {
-        setProfile(profileData);
+      if (profileResponse.error && profileResponse.error.code !== 'PGRST116') {
+        console.error('Error fetching profile:', profileResponse.error);
+      } else if (profileResponse.data) {
+        setProfile(profileResponse.data);
       }
 
-      // Fetch user orders
-      const { data: ordersData, error: ordersError } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false });
-
-      if (ordersError) {
-        console.error('Error fetching orders:', ordersError);
+      if (ordersResponse.error) {
+        console.error('Error fetching orders:', ordersResponse.error);
       } else {
-        setOrders(ordersData || []);
+        setOrders(ordersResponse.data || []);
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
     } finally {
       setLoadingData(false);
     }
-  };
+  }, [user?.id]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -89,27 +83,36 @@ const Dashboard = () => {
     toast.success('Signed out successfully');
   };
 
-  const formatAmount = (amount: number) => {
+  const formatAmount = useCallback((amount: number) => {
     return new Intl.NumberFormat('en-NG', {
       style: 'currency',
       currency: 'NGN'
     }).format(amount / 100);
-  };
+  }, []);
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = useCallback((status: string) => {
     switch (status) {
       case 'paid':
       case 'completed':
-        return 'bg-green-100 text-green-800';
+        return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300';
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-300';
       case 'failed':
       case 'cancelled':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300';
     }
-  };
+  }, []);
+
+  const orderStats = useMemo(() => {
+    const total = orders.length;
+    const completed = orders.filter(o => o.order_status === 'completed').length;
+    const pending = orders.filter(o => o.order_status === 'pending').length;
+    const totalSpent = orders.reduce((sum, order) => sum + order.total_amount, 0);
+    
+    return { total, completed, pending, totalSpent };
+  }, [orders]);
 
   if (loading || loadingData) {
     return (
@@ -138,6 +141,65 @@ const Dashboard = () => {
               <LogOut className="mr-2 h-4 w-4" />
               Sign Out
             </Button>
+          </div>
+
+          {/* Stats Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <Card className="border-primary/10 hover:shadow-lg transition-all duration-200">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Total Orders</p>
+                    <p className="text-2xl font-bold text-foreground">{orderStats.total}</p>
+                  </div>
+                  <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Package className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-primary/10 hover:shadow-lg transition-all duration-200">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Completed</p>
+                    <p className="text-2xl font-bold text-emerald-600">{orderStats.completed}</p>
+                  </div>
+                  <div className="h-12 w-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+                    <TrendingUp className="h-6 w-6 text-emerald-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-primary/10 hover:shadow-lg transition-all duration-200">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Pending</p>
+                    <p className="text-2xl font-bold text-amber-600">{orderStats.pending}</p>
+                  </div>
+                  <div className="h-12 w-12 bg-amber-100 rounded-lg flex items-center justify-center">
+                    <CreditCard className="h-6 w-6 text-amber-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-primary/10 hover:shadow-lg transition-all duration-200">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Total Spent</p>
+                    <p className="text-2xl font-bold text-foreground">{formatAmount(orderStats.totalSpent)}</p>
+                  </div>
+                  <div className="h-12 w-12 bg-secondary/10 rounded-lg flex items-center justify-center">
+                    <CreditCard className="h-6 w-6 text-secondary" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
