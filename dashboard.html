@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Magazine Platform</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Loading your dashboard...</p>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="dashboard hidden">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="header-info">
+                    <h1>Dashboard</h1>
+                    <p>Welcome back, <span id="user-name">User</span></p>
+                </div>
+                <button id="sign-out-btn" class="btn btn-outline">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Sign Out
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-content">
+                    <div class="stat-info">
+                        <p class="stat-label">Total Orders</p>
+                        <p class="stat-value" id="total-orders">0</p>
+                    </div>
+                    <div class="stat-icon primary">
+                        <i class="fas fa-box"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-content">
+                    <div class="stat-info">
+                        <p class="stat-label">Completed</p>
+                        <p class="stat-value success" id="completed-orders">0</p>
+                    </div>
+                    <div class="stat-icon success">
+                        <i class="fas fa-trending-up"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-content">
+                    <div class="stat-info">
+                        <p class="stat-label">Pending</p>
+                        <p class="stat-value warning" id="pending-orders">0</p>
+                    </div>
+                    <div class="stat-icon warning">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-content">
+                    <div class="stat-info">
+                        <p class="stat-label">Total Spent</p>
+                        <p class="stat-value" id="total-spent">₦0</p>
+                    </div>
+                    <div class="stat-icon secondary">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="main-grid">
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <div class="card profile-card">
+                    <div class="card-header gradient-header">
+                        <h3><i class="fas fa-user"></i> Profile</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="profile-field">
+                            <p class="field-label">Name</p>
+                            <p class="field-value" id="profile-name">Not provided</p>
+                        </div>
+                        <div class="profile-field">
+                            <p class="field-label">Email</p>
+                            <p class="field-value" id="profile-email">Not provided</p>
+                        </div>
+                        <div class="profile-field">
+                            <p class="field-label">Phone</p>
+                            <p class="field-value" id="profile-phone">Not provided</p>
+                        </div>
+                        <div class="profile-field">
+                            <p class="field-label">Address</p>
+                            <p class="field-value" id="profile-address">Not provided</p>
+                        </div>
+                        <button class="btn btn-outline w-full">Edit Profile</button>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card quick-actions-card">
+                    <div class="card-header gradient-header-alt">
+                        <h3>Quick Actions</h3>
+                    </div>
+                    <div class="card-content">
+                        <button class="btn btn-primary w-full mb-3">
+                            <i class="fas fa-shopping-cart"></i>
+                            Order Magazine
+                        </button>
+                        <button class="btn btn-outline w-full">
+                            <i class="fas fa-newspaper"></i>
+                            Browse Articles
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Section -->
+            <div class="orders-section">
+                <div class="card orders-card">
+                    <div class="card-header gradient-header">
+                        <h3><i class="fas fa-history"></i> Order History</h3>
+                        <p class="card-description">Track your magazine orders and payment status</p>
+                    </div>
+                    <div class="card-content">
+                        <div id="orders-list" class="orders-list">
+                            <!-- Orders will be populated by JavaScript -->
+                        </div>
+                        
+                        <!-- Empty State -->
+                        <div id="empty-orders" class="empty-state">
+                            <i class="fas fa-box-open"></i>
+                            <h3>No orders yet</h3>
+                            <p>Start by ordering your first magazine copy!</p>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-shopping-cart"></i>
+                                Order Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
