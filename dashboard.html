@@ -32,54 +32,62 @@
             </div>
         </header>
 
-        <!-- Stats Overview -->
+    <!-- Stats Overview -->
         <div class="stats-grid">
-            <div class="stat-card">
+            <div class="stat-card" data-stat="total">
                 <div class="stat-content">
                     <div class="stat-info">
                         <p class="stat-label">Total Orders</p>
                         <p class="stat-value" id="total-orders">0</p>
+                        <p class="stat-trend" id="total-trend">+0% from last month</p>
                     </div>
                     <div class="stat-icon primary">
                         <i class="fas fa-box"></i>
                     </div>
                 </div>
+                <div class="stat-sparkline" id="total-sparkline"></div>
             </div>
 
-            <div class="stat-card">
+            <div class="stat-card" data-stat="completed">
                 <div class="stat-content">
                     <div class="stat-info">
                         <p class="stat-label">Completed</p>
                         <p class="stat-value success" id="completed-orders">0</p>
+                        <p class="stat-trend success" id="completed-trend">+0% completion rate</p>
                     </div>
                     <div class="stat-icon success">
-                        <i class="fas fa-trending-up"></i>
+                        <i class="fas fa-check-circle"></i>
                     </div>
                 </div>
+                <div class="stat-sparkline" id="completed-sparkline"></div>
             </div>
 
-            <div class="stat-card">
+            <div class="stat-card" data-stat="pending">
                 <div class="stat-content">
                     <div class="stat-info">
                         <p class="stat-label">Pending</p>
                         <p class="stat-value warning" id="pending-orders">0</p>
+                        <p class="stat-trend" id="pending-trend">Processing time: 2-3 days</p>
                     </div>
                     <div class="stat-icon warning">
-                        <i class="fas fa-credit-card"></i>
+                        <i class="fas fa-clock"></i>
                     </div>
                 </div>
+                <div class="stat-sparkline" id="pending-sparkline"></div>
             </div>
 
-            <div class="stat-card">
+            <div class="stat-card" data-stat="revenue">
                 <div class="stat-content">
                     <div class="stat-info">
                         <p class="stat-label">Total Spent</p>
                         <p class="stat-value" id="total-spent">₦0</p>
+                        <p class="stat-trend" id="revenue-trend">+0% this month</p>
                     </div>
                     <div class="stat-icon secondary">
-                        <i class="fas fa-wallet"></i>
+                        <i class="fas fa-naira-sign"></i>
                     </div>
                 </div>
+                <div class="stat-sparkline" id="revenue-sparkline"></div>
             </div>
         </div>
 
@@ -134,23 +142,58 @@
             <div class="orders-section">
                 <div class="card orders-card">
                     <div class="card-header gradient-header">
-                        <h3><i class="fas fa-history"></i> Order History</h3>
-                        <p class="card-description">Track your magazine orders and payment status</p>
+                        <div class="header-title">
+                            <h3><i class="fas fa-history"></i> Order History</h3>
+                            <p class="card-description">Track your magazine orders and payment status</p>
+                        </div>
+                        <div class="header-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="order-search" placeholder="Search orders..." />
+                            </div>
+                            <div class="filter-dropdown">
+                                <select id="order-filter">
+                                    <option value="all">All Orders</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="paid">Paid</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-content">
+                        <div class="orders-summary">
+                            <div class="summary-item">
+                                <span class="summary-label">Total Orders:</span>
+                                <span class="summary-value" id="orders-count">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Last Order:</span>
+                                <span class="summary-value" id="last-order-date">Never</span>
+                            </div>
+                        </div>
+                        
                         <div id="orders-list" class="orders-list">
                             <!-- Orders will be populated by JavaScript -->
                         </div>
                         
                         <!-- Empty State -->
                         <div id="empty-orders" class="empty-state">
-                            <i class="fas fa-box-open"></i>
+                            <div class="empty-illustration">
+                                <i class="fas fa-box-open"></i>
+                            </div>
                             <h3>No orders yet</h3>
                             <p>Start by ordering your first magazine copy!</p>
                             <button class="btn btn-primary">
                                 <i class="fas fa-shopping-cart"></i>
                                 Order Now
                             </button>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div id="orders-loading" class="loading-state hidden">
+                            <div class="loading-spinner"></div>
+                            <p>Loading orders...</p>
                         </div>
                     </div>
                 </div>

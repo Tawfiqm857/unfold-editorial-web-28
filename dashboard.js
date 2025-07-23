@@ -10,13 +10,34 @@ class DashboardApp {
     }
 
     init() {
-        // Simulate loading time
+        // Simulate loading time with progress
+        this.showLoadingProgress();
         setTimeout(() => {
             this.loadMockData();
             this.hideLoading();
             this.render();
             this.bindEvents();
-        }, 1500);
+        }, 800);
+    }
+
+    showLoadingProgress() {
+        const loadingText = document.querySelector('.loading-content p');
+        const messages = [
+            'Loading your dashboard...',
+            'Fetching your orders...',
+            'Preparing your data...',
+            'Almost ready...'
+        ];
+        
+        let index = 0;
+        const interval = setInterval(() => {
+            if (index < messages.length) {
+                loadingText.textContent = messages[index];
+                index++;
+            } else {
+                clearInterval(interval);
+            }
+        }, 200);
     }
 
     loadMockData() {
@@ -93,10 +114,43 @@ class DashboardApp {
     renderStats() {
         const stats = this.calculateStats();
         
-        document.getElementById('total-orders').textContent = stats.total;
-        document.getElementById('completed-orders').textContent = stats.completed;
-        document.getElementById('pending-orders').textContent = stats.pending;
+        // Animate counter updates
+        this.animateCounter('total-orders', stats.total);
+        this.animateCounter('completed-orders', stats.completed);
+        this.animateCounter('pending-orders', stats.pending);
+        
         document.getElementById('total-spent').textContent = this.formatAmount(stats.totalSpent);
+        
+        // Update trends
+        document.getElementById('total-trend').textContent = `+${Math.round(Math.random() * 15)}% from last month`;
+        document.getElementById('completed-trend').textContent = `${Math.round((stats.completed / stats.total) * 100)}% completion rate`;
+        document.getElementById('pending-trend').textContent = `Processing time: ${2 + Math.round(Math.random())} days`;
+        document.getElementById('revenue-trend').textContent = `+${Math.round(Math.random() * 25)}% this month`;
+    }
+
+    animateCounter(elementId, targetValue) {
+        const element = document.getElementById(elementId);
+        const startValue = 0;
+        const duration = 1000;
+        const startTime = performance.now();
+        
+        const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const currentValue = Math.floor(startValue + (targetValue - startValue) * this.easeOutCubic(progress));
+            
+            element.textContent = currentValue;
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+        };
+        
+        requestAnimationFrame(animate);
+    }
+
+    easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
     }
 
     renderProfile() {
@@ -106,11 +160,15 @@ class DashboardApp {
         document.getElementById('profile-address').textContent = this.profile?.address || 'Not provided';
     }
 
-    renderOrders() {
+    renderOrders(filteredOrders = null) {
         const ordersList = document.getElementById('orders-list');
         const emptyState = document.getElementById('empty-orders');
+        const ordersToShow = filteredOrders || this.orders;
 
-        if (this.orders.length === 0) {
+        // Update summary
+        this.updateOrdersSummary(ordersToShow);
+
+        if (ordersToShow.length === 0) {
             ordersList.style.display = 'none';
             emptyState.style.display = 'block';
             return;
@@ -118,9 +176,10 @@ class DashboardApp {
 
         emptyState.style.display = 'none';
         ordersList.style.display = 'block';
+        ordersList.classList.add('show');
 
-        const ordersHTML = this.orders.map(order => `
-            <div class="order-item">
+        const ordersHTML = ordersToShow.map((order, index) => `
+            <div class="order-item" style="animation-delay: ${index * 100}ms">
                 <div class="order-header">
                     <div class="order-info">
                         <h4>Order #${order.order_number}</h4>
@@ -133,16 +192,31 @@ class DashboardApp {
                 </div>
                 <div class="order-badges">
                     <span class="badge ${this.getStatusClass(order.payment_status)}">
-                        Payment: ${order.payment_status}
+                        <i class="fas ${this.getStatusIcon(order.payment_status)}"></i>
+                        Payment: ${this.capitalize(order.payment_status)}
                     </span>
                     <span class="badge ${this.getStatusClass(order.order_status)}">
-                        Order: ${order.order_status}
+                        <i class="fas ${this.getStatusIcon(order.order_status)}"></i>
+                        Order: ${this.capitalize(order.order_status)}
                     </span>
                 </div>
             </div>
         `).join('');
 
         ordersList.innerHTML = ordersHTML;
+    }
+
+    updateOrdersSummary(orders) {
+        document.getElementById('orders-count').textContent = orders.length;
+        
+        if (orders.length > 0) {
+            const lastOrder = orders.reduce((latest, order) => {
+                return new Date(order.created_at) > new Date(latest.created_at) ? order : latest;
+            });
+            document.getElementById('last-order-date').textContent = this.formatDate(lastOrder.created_at);
+        } else {
+            document.getElementById('last-order-date').textContent = 'Never';
+        }
     }
 
     calculateStats() {
@@ -184,10 +258,46 @@ class DashboardApp {
         }
     }
 
+    getStatusIcon(status) {
+        switch (status) {
+            case 'paid':
+            case 'completed':
+                return 'fa-check-circle';
+            case 'pending':
+                return 'fa-clock';
+            case 'failed':
+            case 'cancelled':
+                return 'fa-times-circle';
+            default:
+                return 'fa-info-circle';
+        }
+    }
+
+    capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     bindEvents() {
         // Sign out button
         document.getElementById('sign-out-btn').addEventListener('click', () => {
             this.signOut();
+        });
+
+        // Search functionality
+        document.getElementById('order-search').addEventListener('input', (e) => {
+            this.filterOrders(e.target.value, document.getElementById('order-filter').value);
+        });
+
+        // Filter functionality
+        document.getElementById('order-filter').addEventListener('change', (e) => {
+            this.filterOrders(document.getElementById('order-search').value, e.target.value);
+        });
+
+        // Stat card animations
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('click', () => {
+                this.showStatDetails(card.dataset.stat);
+            });
         });
 
         // Quick action buttons
@@ -208,6 +318,49 @@ class DashboardApp {
                 });
             }
         });
+    }
+
+    filterOrders(searchTerm, status) {
+        let filteredOrders = this.orders;
+
+        // Filter by search term
+        if (searchTerm) {
+            filteredOrders = filteredOrders.filter(order => 
+                order.order_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                this.formatDate(order.created_at).toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+
+        // Filter by status
+        if (status && status !== 'all') {
+            filteredOrders = filteredOrders.filter(order => 
+                order.order_status === status || order.payment_status === status
+            );
+        }
+
+        this.renderOrders(filteredOrders);
+    }
+
+    showStatDetails(statType) {
+        const stats = this.calculateStats();
+        let message = '';
+        
+        switch (statType) {
+            case 'total':
+                message = `You have placed ${stats.total} orders in total.`;
+                break;
+            case 'completed':
+                message = `${stats.completed} of your orders have been completed successfully.`;
+                break;
+            case 'pending':
+                message = `${stats.pending} orders are currently being processed.`;
+                break;
+            case 'revenue':
+                message = `You have spent ${this.formatAmount(stats.totalSpent)} on magazine orders.`;
+                break;
+        }
+        
+        this.showToast(message, 'info');
     }
 
     signOut() {
