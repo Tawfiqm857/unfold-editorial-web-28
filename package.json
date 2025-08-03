@@ -5,7 +5,10 @@
   "main": "dashboard.html",
   "scripts": {
     "start": "echo 'Open dashboard.html in your browser'",
-    "build": "echo 'No build needed for static files'"
+    "build": "echo 'No build needed for static files'",
+    "build:dev": "vite build --mode development"
+
+    
   },
   "private": true
 }
